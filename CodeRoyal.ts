@@ -17,22 +17,24 @@ function doN(x: number, func: any) {
 }
 
 function ownerDecoder(ownerCode: number): Owner {
-    if (ownerCode == 0) {
-        return "ALLIED"
-    } else if (ownerCode == 1) {
-        return "ENNEMY"
-    } else {
-        return null
+    switch (ownerCode) {
+        case 0:
+            return "ALLIED"
+        case 1:
+            return "ENNEMY"
+        default:
+            return null
     }
 }
 
 function unitTypeDecoder(unitTypeCode: number): UnitType {
-    if (unitTypeCode == 1) {
-        return "ARCHER"
-    } else if (unitTypeCode == 0) {
-        return "KNIGHT"
-    } else {
-        return null
+    switch (unitTypeCode) {
+        case 1: 
+            return "ARCHER"
+        case 0:
+            return "KNIGHT"
+        default:
+            return null 
     }
 }
 
@@ -51,7 +53,7 @@ interface siteTurnData {
     unitType: UnitType,
 }
 
-interface unitPos {
+interface unit {
     x: number,
     y: number,
     owner: Owner,
@@ -80,13 +82,16 @@ function buildSiteTurnData(): siteTurnData {
     }
 }
 
-//for (let i = 0; i < numUnits; i++) {
-//        var inputs: string[] = readline().split(' ');
-//        return { const x: number = parseInt(inputs[0]);
-//        const y: number = parseInt(inputs[1]);
-//        const owner: number = parseInt(inputs[2]);
-//        const unitType: number = parseInt(inputs[3]); // -1 = QUEEN, 0 = KNIGHT, 1 = ARCHER
-//        const health: number = parseInt(inputs[4]);
+function buildUnit(): unit {
+    var inputs: string[] = readline().split(' ');
+    return { 
+        x: parseInt(inputs[0]),
+        y: parseInt(inputs[1]),
+        owner: ownerDecoder(parseInt(inputs[2])),
+        unitType: unitTypeDecoder(parseInt(inputs[3])), // -1 = QUEEN, 0 = KNIGHT, 1 = ARCHER
+        health: parseInt(inputs[4]),
+    }
+}
 
 const numSites: number = parseInt(readline());
 const siteStaticDataList: siteStaticData[] = doN(numSites, buildSiteStaticData)
@@ -97,21 +102,14 @@ while (true) {
     const gold: number = parseInt(inputs[0]);
     const touchedSite: number = parseInt(inputs[1]); // -1 if none
     const siteTurnDataList: siteTurnData[] = doN(numSites, buildSiteTurnData)
-    console.error("siteTurnDataList", siteTurnDataList)
     const numUnits: number = parseInt(readline());
-    for (let i = 0; i < numUnits; i++) {
-        var inputs: string[] = readline().split(' ');
-        const x: number = parseInt(inputs[0]);
-        const y: number = parseInt(inputs[1]);
-        const owner: number = parseInt(inputs[2]);
-        const unitType: number = parseInt(inputs[3]); // -1 = QUEEN, 0 = KNIGHT, 1 = ARCHER
-        const health: number = parseInt(inputs[4]);
-    }
-
+    const unitList: unit[] = doN(numUnits, buildUnit)
     // Write an action using console.log()
     // To debug: console.error('Debug messages...');
     // First line: A valid queen action
     // Second line: A set of training instructions
+    console.error("siteTurnDataList", siteTurnDataList)
+    console.error("unitList", unitList)
     console.error("siteStaticDataList", siteStaticDataList)
     console.log("BUILD 10 BARRACKS-KNIGHT")
     console.log("TRAIN")
