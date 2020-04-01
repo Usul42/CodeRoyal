@@ -3,22 +3,34 @@
  * the standard input according to the problem statement.
  **/
 
-type Owner = "BLUE" | "RED" | null
+type Owner = "ALLIED" | "ENNEMY" | null
+
+type UnitType = "ARCHER" | "KNIGHT" | null
 
 function doN(x: number, func: any) {
     if (x == 0) {
         return []
     } else {
         const nextState = doN(x - 1, func)
-        return [func(), ...nextState]
+        return [...nextState, func()]
     }
 }
 
 function ownerDecoder(ownerCode: number): Owner {
     if (ownerCode == 0) {
-        return "BLUE"
+        return "ALLIED"
     } else if (ownerCode == 1) {
-        return "RED"
+        return "ENNEMY"
+    } else {
+        return null
+    }
+}
+
+function unitTypeDecoder(unitTypeCode: number): UnitType {
+    if (unitTypeCode == 1) {
+        return "ARCHER"
+    } else if (unitTypeCode == 0) {
+        return "KNIGHT"
     } else {
         return null
     }
@@ -35,15 +47,15 @@ interface siteTurnData {
     siteId: number,
     structureType: number,
     owner: Owner,
-    param1: number,
-    param2: number,
+    trainLoading: number,
+    unitType: UnitType,
 }
 
 interface unitPos {
     x: number,
     y: number,
     owner: Owner,
-    unitType: number,
+    unitType: UnitType,
     health: number,
 }
 
@@ -63,10 +75,18 @@ function buildSiteTurnData(): siteTurnData {
         siteId:  parseInt(inputs[0]),
         structureType: parseInt(inputs[3]), // -1 = No structure, 2 = Barracks
         owner: ownerDecoder(parseInt(inputs[4])), // -1 = No structure, 0 = Friendly, 1 = Enemy
-        param1:  parseInt(inputs[5]),
-        param2: parseInt(inputs[6]),
+        trainLoading:  parseInt(inputs[5]),
+        unitType: unitTypeDecoder(parseInt(inputs[6])),
     }
 }
+
+//for (let i = 0; i < numUnits; i++) {
+//        var inputs: string[] = readline().split(' ');
+//        return { const x: number = parseInt(inputs[0]);
+//        const y: number = parseInt(inputs[1]);
+//        const owner: number = parseInt(inputs[2]);
+//        const unitType: number = parseInt(inputs[3]); // -1 = QUEEN, 0 = KNIGHT, 1 = ARCHER
+//        const health: number = parseInt(inputs[4]);
 
 const numSites: number = parseInt(readline());
 const siteStaticDataList: siteStaticData[] = doN(numSites, buildSiteStaticData)
@@ -95,3 +115,4 @@ while (true) {
     console.error("siteStaticDataList", siteStaticDataList)
     console.log("BUILD 10 BARRACKS-KNIGHT")
     console.log("TRAIN")
+}
