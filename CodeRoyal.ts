@@ -16,6 +16,17 @@ function doN(x: number, func: any) {
     }
 }
 
+function dist(queen: unit, unit: siteStaticData): any {
+    return {
+        id: unit.siteId,
+        dist: Math.sqrt(
+        Math.pow(unit.x - queen.x, 2)
+        +
+        Math.pow(unit.y - queen.y, 2)
+        )
+    }
+}
+
 function ownerDecoder(ownerCode: number): Owner {
     switch (ownerCode) {
         case 0:
@@ -104,13 +115,23 @@ while (true) {
     const siteTurnDataList: siteTurnData[] = doN(numSites, buildSiteTurnData)
     const numUnits: number = parseInt(readline());
     const unitList: unit[] = doN(numUnits, buildUnit)
+    const queen = unitList.find(e => e.unitType === null)
     // Write an action using console.log()
     // To debug: console.error('Debug messages...');
     // First line: A valid queen action
     // Second line: A set of training instructions
-    console.error("siteTurnDataList", siteTurnDataList)
+    // console.error("siteTurnDataList", siteTurnDataList)
     console.error("unitList", unitList)
-    console.error("siteStaticDataList", siteStaticDataList)
-    console.log("BUILD 10 BARRACKS-KNIGHT")
-    console.log("TRAIN")
+    // console.error("siteStaticDataList", siteStaticDataList)
+    console.error("queen", queen) // Find the queen
+    const queenDists = siteStaticDataList.map(e => dist(queen, e))
+                                         .filter(e => siteTurnDataList[e.id].owner !== "ALLIED")
+                                         .sort((a, b) => a.dist - b.dist)
+    const trainLess =  siteStaticDataList.map(e => dist(queen, e))
+                                         .filter(e => siteTurnDataList[e.id].owner !== "ENNEMY")
+                                         .sort((a, b) => a.dist - b.dist)
+    console.error("trainLess", trainLess)
+    console.error("length", unitList.length, queenDists.length)
+    console.log(`BUILD ${queenDists[0].id} BARRACKS-KNIGHT`)
+    console.log(`TRAIN ${trainLess[0].id}`)
 }
